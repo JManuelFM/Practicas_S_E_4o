@@ -1,3 +1,5 @@
+#include "includes/MKL46Z4.h"  // Incluye el archivo de encabezado adecuado para el microcontrolador
+
 //*****************************************************************************
 // Declaration of the default fault handlers
 //*****************************************************************************
@@ -146,7 +148,7 @@ void (* const g_pfnVectors[])(void) =
 void Default_ResetHandler(void)
 {
   unsigned long *pulSrc, *pulDest;
-
+  SIM->COPC = 0;  // Desactiva el Watchdog Timer
   /* copy the data segment initializers from flash to SRAM */
   pulSrc = &_sidata;
   for(pulDest = &_sdata; pulDest < &_edata; )
