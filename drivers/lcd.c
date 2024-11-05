@@ -318,6 +318,27 @@ void lcd_set(uint8_t value, uint8_t digit)
   }
 }
 
+extern unsigned int division(int dividend, int divisor);
+
+unsigned int divide(int dividend, int divisor) {
+    unsigned int quotient = 0;
+    
+    __asm__ volatile (
+        "loop: \n\t"
+        "cmp %[dividend], %[divisor] \n\t"    // Comparar divisor con dividendo
+        "blt end \n\t"        // Saltar a fin si divisor > dividendo
+        "sub %[dividend], %[dividend], %[divisor] \n\t"    // Restar divisor de dividendo
+        "add %[quotient], %[quotient], #1 \n\t"        // Incrementar cociente
+        "b loop \n\t"      // Volver al inicio del bucle
+        "end: \n\t"
+        : [quotient] "+r" (quotient), [dividend] "+r" (dividend) 
+        : [divisor] "r" (divisor)
+    );
+    
+    return quotient;
+}
+
+
 
 //
 // Displays a 4 Digit number in decimal
@@ -328,10 +349,16 @@ void lcd_display_dec(uint16_t value)
     //Display "Err" if value is greater than 4 digits
     lcd_display_error(0x10);
   } else {
-    lcd_set(value/1000, 1);
-    lcd_set((value - (value/1000)*1000)/100, 2);
-    lcd_set((value - (value/100)*100)/10, 3);
-    lcd_set(value - (value/10)*10, 4);
+    //unsigned int miles = divide(value, 1000);
+    //unsigned int cientos = divide((value - miles), 100);
+    //unsigned int decenas = divide((value - miles - cientos), 10);
+    unsigned int miles = division(value, 1000);
+    unsigned int cientos = division((value - miles), 100);
+    unsigned int decenas = division((value - miles - cientos), 10);
+    lcd_set(miles, 1);
+    lcd_set(cientos, 2);
+    lcd_set(decenas, 3);
+    lcd_set(value - (miles + cientos + decenas), 4);
   }
 }
 
@@ -357,9 +384,11 @@ void lcd_display_time(uint8_t value1, uint8_t value2)
    //Display "Err" if either value is greater than 2 digits
    lcd_display_error(0x10);
   } else {
-    lcd_set(value1/10, 1);
+    //lcd_set(divide(value1, 10), 1);
+    lcd_set(division(value1, 10), 1);
     lcd_set(value1 % 10, 2);
-    lcd_set(value2/10, 3);
+    //lcd_set(divide(value2, 10), 3);
+    lcd_set(division(value2, 10), 3);
     lcd_set(value2 % 10, 4);
     SegLCD_Col_On();
   }
