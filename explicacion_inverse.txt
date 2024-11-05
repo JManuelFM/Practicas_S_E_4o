@@ -1,0 +1,3 @@
+Explicación optimización
+
+Se establece el registro de salida como el que recibirá el resultado de la función, evitando tener que usar movs una vez más.
