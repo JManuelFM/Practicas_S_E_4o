@@ -2346,6 +2346,7 @@ typedef struct {
 #define LCD_GCR_LCLK(x)                          (((uint32_t)(((uint32_t)(x))<<LCD_GCR_LCLK_SHIFT))&LCD_GCR_LCLK_MASK)
 #define LCD_GCR_SOURCE_MASK                      0x40u
 #define LCD_GCR_SOURCE_SHIFT                     6
+#define LCD_GCR_SOURCE(x)                        (((uint32_t)(((uint32_t)(x)) << LCD_GCR_SOURCE_SHIFT)) & LCD_GCR_SOURCE_MASK)
 #define LCD_GCR_LCDEN_MASK                       0x80u
 #define LCD_GCR_LCDEN_SHIFT                      7
 #define LCD_GCR_LCDSTP_MASK                      0x100u
@@ -2356,6 +2357,7 @@ typedef struct {
 #define LCD_GCR_FFR_SHIFT                        10
 #define LCD_GCR_ALTSOURCE_MASK                   0x800u
 #define LCD_GCR_ALTSOURCE_SHIFT                  11
+#define LCD_GCR_ALTSOURCE(x)                     (((uint32_t)(((uint32_t)(x)) << LCD_GCR_ALTSOURCE_SHIFT)) & LCD_GCR_ALTSOURCE_MASK)
 #define LCD_GCR_ALTDIV_MASK                      0x3000u
 #define LCD_GCR_ALTDIV_SHIFT                     12
 #define LCD_GCR_ALTDIV(x)                        (((uint32_t)(((uint32_t)(x))<<LCD_GCR_ALTDIV_SHIFT))&LCD_GCR_ALTDIV_MASK)
@@ -2387,6 +2389,7 @@ typedef struct {
 #define LCD_AR_ALT_SHIFT                         6
 #define LCD_AR_BLINK_MASK                        0x80u
 #define LCD_AR_BLINK_SHIFT                       7
+#define LCD_AR_BLINK(x)                          (((uint32_t)(((uint32_t)(x)) << LCD_AR_BLINK_SHIFT)) & LCD_AR_BLINK_MASK)
 /* FDCR Bit Fields */
 #define LCD_FDCR_FDPINID_MASK                    0x3Fu
 #define LCD_FDCR_FDPINID_SHIFT                   0
@@ -4215,8 +4218,10 @@ typedef struct {
 /* C1 Bit Fields */
 #define MCG_C1_IREFSTEN_MASK                     0x1u
 #define MCG_C1_IREFSTEN_SHIFT                    0
+#define MCG_C1_IREFSTEN(x)                       (((uint8_t)(((uint8_t)(x)) << MCG_C1_IREFSTEN_SHIFT)) & MCG_C1_IREFSTEN_MASK)
 #define MCG_C1_IRCLKEN_MASK                      0x2u
 #define MCG_C1_IRCLKEN_SHIFT                     1
+#define MCG_C1_IRCLKEN(x)                        (((uint8_t)(((uint8_t)(x)) << MCG_C1_IRCLKEN_SHIFT)) & MCG_C1_IRCLKEN_MASK)
 #define MCG_C1_IREFS_MASK                        0x4u
 #define MCG_C1_IREFS_SHIFT                       2
 #define MCG_C1_FRDIV_MASK                        0x38u
@@ -4228,6 +4233,7 @@ typedef struct {
 /* C2 Bit Fields */
 #define MCG_C2_IRCS_MASK                         0x1u
 #define MCG_C2_IRCS_SHIFT                        0
+#define MCG_C2_IRCS(x)                           (((uint8_t)(((uint8_t)(x)) << MCG_C2_IRCS_SHIFT)) & MCG_C2_IRCS_MASK)
 #define MCG_C2_LP_MASK                           0x2u
 #define MCG_C2_LP_SHIFT                          1
 #define MCG_C2_EREFS0_MASK                       0x4u

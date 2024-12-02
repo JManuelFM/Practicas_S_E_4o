@@ -4,9 +4,9 @@ PREFIX=arm-none-eabi-
 FREERTOS=freertos
 
 ARCHFLAGS=-mthumb -mcpu=cortex-m0plus
-CFLAGS=-I. -I./includes -I./${FREERTOS}/include \
-	   -I./${FREERTOS}/portable/GCC/ARM_CM0 -O0 -g \
-	   -I./${FREERTOS}/include/private
+CFLAGS=-I. -I./includes/ -I./${FREERTOS}/include/ \
+	   -I./${FREERTOS}/portable/GCC/ARM_CM0/ -O0 -g \
+	   -I./${FREERTOS}/include/private/
 LDFLAGS=--specs=nano.specs -Wl,--gc-sections,-Map,$(TARGET).map,-Tlink.ld
 
 CC=$(PREFIX)gcc
@@ -19,7 +19,7 @@ TARGET=main
 
 SRC=main.c startup.c ${FREERTOS}/list.c ${FREERTOS}/queue.c \
 	${FREERTOS}/tasks.c ${FREERTOS}/portable/MemMang/heap_2.c \
-	${FREERTOS}/portable/GCC/ARM_CM0/port.c
+	${FREERTOS}/portable/GCC/ARM_CM0/port.c includes/lcd.c
 OBJ=$(patsubst %.c, %.o, $(SRC))
 
 all: build size
