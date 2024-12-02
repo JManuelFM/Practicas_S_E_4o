@@ -1,57 +1,84 @@
 #include "MKL46Z4.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "lcd.h"
 
-// LED (RG)
-// LED_GREEN = PTD5
-// LED_RED = PTE29
-
-void delay(void)
+  
+void irclk_ini()
 {
-    volatile int i;
-
-    for (i = 0; i < 1000000; i++);
+  MCG->C1 = MCG_C1_IRCLKEN(1) | MCG_C1_IREFSTEN(1);
+  MCG->C2 = MCG_C2_IRCS(0); //0 32KHZ internal reference clock; 1= 4MHz irc
 }
 
-// LED_GREEN = PTD5
 void led_green_init()
 {
-    SIM->SCGC5 |= (1 << 12);      // Habilitar reloxo para o porto D
-    PORTD->PCR[5] = 1 << 8;       // Configurar PTD5 como GPIO
-    GPIOD->PDDR |= (1 << 5);      // Configurar PTD5 como saída
-    GPIOD->PSOR |= (1 << 5);      // Apagar o LED (pón o PTD5 en alto)
+	SIM_COPC = 0;
+	SIM_SCGC5 |= SIM_SCGC5_PORTD_MASK;
+	PORTD_PCR5 = PORT_PCR_MUX(1);
+	GPIOD_PDDR |= (1 << 5);
+	GPIOD_PSOR = (1 << 5);
 }
 
 void led_green_toggle()
 {
-    GPIOD->PTOR = (1 << 5);  // Alternar o estado do LED verde (PTD5)
+	GPIOD_PTOR = (1 << 5);
 }
 
-// LED_RED = PTE29
 void led_red_init()
 {
-    SIM->SCGC5 |= (1 << 13);      // Habilitar reloxo para o porto E
-    PORTE->PCR[29] = 1 << 8;      // Configurar PTE29 como GPIO
-    GPIOE->PDDR |= (1 << 29);     // Configurar PTE29 como saída
-    GPIOE->PSOR |= (1 << 29);     // Apagar o LED (pón o PTE29 en alto)
+	SIM_COPC = 0;
+	SIM_SCGC5 |= SIM_SCGC5_PORTE_MASK;
+	PORTE_PCR29 = PORT_PCR_MUX(1);
+	GPIOE_PDDR |= (1 << 29);
+	GPIOE_PSOR = (1 << 29);
 }
 
-void led_red_toggle()
+void led_red_toggle(void)
 {
-    GPIOE->PTOR = (1 << 29);  // Alternar o estado do LED vermello (PTE29)
+	GPIOE_PTOR = (1 << 29);
+}
+
+void taskLedGreen(void *pvParameters)
+{
+    for (;;) {
+        led_green_toggle();
+        vTaskDelay(200/portTICK_RATE_MS);
+    }
+}
+
+void taskLedRed(void *pvParameters)
+{
+    for (;;) {
+        led_red_toggle();
+        vTaskDelay(500/portTICK_RATE_MS);
+    }
 }
 
 int main(void)
 {
-    SIM->COPC = 0;               // Desactivar Watchdog Timer
-    led_green_init();
-    led_green_toggle();
-    led_red_init();
+	led_green_init();
+	led_red_init();
+	
+	irclk_ini();
+	
+	lcd_ini();
+	
+	lcd_display_dec(40);
 
-    while (1) {
-        led_green_toggle();
-        led_red_toggle();
-        delay();
-    }
+	/* create green led task */
+	xTaskCreate(taskLedGreen, (signed char *)"TaskLedGreen", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
 
-    return 0;
+	/* create red led task */
+	xTaskCreate(taskLedRed, (signed char *)"TaskLedRed", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+	
+	/* start the scheduler */
+	vTaskStartScheduler();
+
+	/* should never reach here! */
+	for (;;);
+
+	return 0;
 }
 
