@@ -1,6 +1,7 @@
 #include "MKL46Z4.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "semphr.h"
 #include "lcd.h"
 #include "queue.h"
   
@@ -9,7 +10,17 @@ volatile uint8_t creadores = 0;
 volatile uint8_t consumidores = 0;
 volatile uint8_t datos_pendentes = 0;
 
-QueueHandle_t cola;
+SemaphoreHandle_t datosMutex;
+
+void initMutex() {
+    datosMutex = xSemaphoreCreateMutex();
+    if (datosMutex == NULL) {
+        // Manejo de error: el mutex no pudo ser creado
+        while (1);
+    }
+}
+
+
 
 void irclk_ini()
 {
@@ -40,13 +51,11 @@ void init_buttons(){
 void taskDisplayData(void *pvParameters){
 	int dataleft, creators, consumers;
 	for(;;){
-	  taskENTER_CRITICAL();
-	  dataleft = datos_pendentes;
-	  creators = creadores;
-	  consumers = consumidores;
+          dataleft = datos_pendentes;
+          creators = creadores;
+          consumers = consumidores;
 	  
 	  lcd_display_time(dataleft, creators * 10 + consumers);
-	  taskEXIT_CRITICAL();
 	  vTaskDelay(100/portTICK_RATE_MS);
 	}
 }
@@ -56,13 +65,14 @@ void taskCreate1(void *pvParameters){
 	  //crea datos
 	  if (creadores > 0){
 	    uint32_t dato = 1; // Dato a enviar
-	    if (uxQueueSpacesAvailable(cola) > 0) { // Verifica si hay espacio en la cola
-	      if (xQueueSend(cola, &dato, 0) == pdTRUE) { // Envía el dato sin bloquear
-        	datos_pendentes++;
-    	      }
-	    }
+	    if (xSemaphoreTake(datosMutex, portMAX_DELAY) == pdTRUE) {
+                if (datos_pendentes < 99){
+                  datos_pendentes++;
+                }
+                xSemaphoreGive(datosMutex);
+            }
 	  }
-	  vTaskDelay(100/portTICK_RATE_MS);
+	  vTaskDelay(500/portTICK_RATE_MS);
 	}
 }
 
@@ -71,13 +81,14 @@ void taskCreate2(void *pvParameters){
 	  //crea datos
 	  if (creadores > 1){
 	    uint32_t dato = 2; // Dato a enviar
-	    if (uxQueueSpacesAvailable(cola) > 0) { // Verifica si hay espacio en la cola
-	      if (xQueueSend(cola, &dato, 0) == pdTRUE) { // Envía el dato sin bloquear
-        	datos_pendentes++;
-    	      }
-	    }
+    	    if (xSemaphoreTake(datosMutex, portMAX_DELAY) == pdTRUE) {
+                if (datos_pendentes < 99){
+                  datos_pendentes++;
+                }
+                xSemaphoreGive(datosMutex);
+            }
 	  }
-	  vTaskDelay(100/portTICK_RATE_MS);
+	  vTaskDelay(500/portTICK_RATE_MS);
 	}
 }
 
@@ -86,13 +97,30 @@ void taskCreate3(void *pvParameters){
 	  //crea datos
 	  if (creadores > 2){
 	    uint32_t dato = 3; // Dato a enviar
-	    if (uxQueueSpacesAvailable(cola) > 0) { // Verifica si hay espacio en la cola
-	      if (xQueueSend(cola, &dato, 0) == pdTRUE) { // Envía el dato sin bloquear
-        	datos_pendentes++;
-    	      }
-	    }
+            if (xSemaphoreTake(datosMutex, portMAX_DELAY) == pdTRUE) {
+                if (datos_pendentes < 99){
+                  datos_pendentes++;
+                }
+                xSemaphoreGive(datosMutex);
+            }
 	  }
-	  vTaskDelay(100/portTICK_RATE_MS);
+	  vTaskDelay(500/portTICK_RATE_MS);
+	}
+}
+
+void taskCreate4(void *pvParameters){
+	for(;;){
+	  //crea datos
+	  if (creadores > 3){
+	    uint32_t dato = 4; // Dato a enviar
+            if (xSemaphoreTake(datosMutex, portMAX_DELAY) == pdTRUE) {
+                if (datos_pendentes < 99){
+                  datos_pendentes++;
+                }
+                xSemaphoreGive(datosMutex);
+            }
+	  }
+	  vTaskDelay(500/portTICK_RATE_MS);
 	}
 }
 
@@ -101,13 +129,14 @@ void taskConsume1(void *pvParameters){
 	  //consume datos
 	  if (consumidores > 0){
 	    uint32_t datoRecibido;
-	    if (uxQueueMessagesWaiting(cola) > 0) { // Verifica si hay datos en la cola
-    	      if (xQueueReceive(cola, &datoRecibido, 0) == pdTRUE) { // Recibe el dato sin bloquear
-        	datos_pendentes--;
-    	      }
-	    }
+            if (xSemaphoreTake(datosMutex, portMAX_DELAY) == pdTRUE) {
+                if (datos_pendentes > 0) {
+                    datos_pendentes--;
+                }
+                xSemaphoreGive(datosMutex);
+            }
 	  }
-	  vTaskDelay(100/portTICK_RATE_MS);
+	  vTaskDelay(500/portTICK_RATE_MS);
 	}
 }
 
@@ -116,13 +145,14 @@ void taskConsume2(void *pvParameters){
 	  //consume datos
 	  if (consumidores > 1){
 	    uint32_t datoRecibido;
-	    if (uxQueueMessagesWaiting(cola) > 0) { // Verifica si hay datos en la cola
-    	      if (xQueueReceive(cola, &datoRecibido, 0) == pdTRUE) { // Recibe el dato sin bloquear
-        	datos_pendentes--;
-    	      }
-	    }
+	    if (xSemaphoreTake(datosMutex, portMAX_DELAY) == pdTRUE) {
+                if (datos_pendentes > 0) {
+                    datos_pendentes--;
+                }
+                xSemaphoreGive(datosMutex);
+            }
 	  }
-	  vTaskDelay(100/portTICK_RATE_MS);
+	  vTaskDelay(500/portTICK_RATE_MS);
 	}
 }
 
@@ -131,24 +161,41 @@ void taskConsume3(void *pvParameters){
 	  //consume datos
 	  if (consumidores > 2){
 	    uint32_t datoRecibido;
-	    if (uxQueueMessagesWaiting(cola) > 0) { // Verifica si hay datos en la cola
-    	      if (xQueueReceive(cola, &datoRecibido, 0) == pdTRUE) { // Recibe el dato sin bloquear
-        	datos_pendentes--;
-    	      }
-	    }
+            if (xSemaphoreTake(datosMutex, portMAX_DELAY) == pdTRUE) {
+                if (datos_pendentes > 0) {
+                    datos_pendentes--;
+                }
+                xSemaphoreGive(datosMutex);
+            }
 	  }
-	  vTaskDelay(100/portTICK_RATE_MS);
+	  vTaskDelay(500/portTICK_RATE_MS);
+	}
+}
+
+void taskConsume4(void *pvParameters){
+	for(;;){
+	  //consume datos
+	  if (consumidores > 3){
+	    uint32_t datoRecibido;
+            if (xSemaphoreTake(datosMutex, portMAX_DELAY) == pdTRUE) {
+                if (datos_pendentes > 0) {
+                    datos_pendentes--;
+                }
+                xSemaphoreGive(datosMutex);
+            }
+	  }
+	  vTaskDelay(500/portTICK_RATE_MS);
 	}
 }
 
 void PORTDIntHandler(void){
     if(PORTC->ISFR & (1<<12)){ //si botón derecho
       consumidores++;
-      if(consumidores == 4) consumidores = 0;
+      if(consumidores == 5) consumidores = 0;
       PORTC->ISFR |= (1 << 12);
     }else if(PORTC->ISFR & (1<<3)){ //si botón izquierdo
       creadores++;
-      if(creadores == 4) creadores = 0;
+      if(creadores == 5) creadores = 0;
       PORTC->ISFR |= (1 << 3);
     }
 }
@@ -161,14 +208,9 @@ int main(void)
 	
 	lcd_ini();
 	
+	initMutex();
+	
 	SIM->COPC = 0;
-	
-	cola = xQueueCreate(99, sizeof(uint32_t));
-	
-        if (cola == NULL) {
-          // Error al crear la cola
-          while (1);
-        }
 		
 	xTaskCreate(taskDisplayData, (signed char *)"TaskDisplayData", 
 		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
@@ -182,6 +224,9 @@ int main(void)
 	xTaskCreate(taskCreate3, (signed char *)"TaskCreate3", 
 		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
 		
+	xTaskCreate(taskCreate4, (signed char *)"TaskCreate4", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+		
 	xTaskCreate(taskConsume1, (signed char *)"TaskConsume1", 
 		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
 		
@@ -189,6 +234,9 @@ int main(void)
 		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
 		
 	xTaskCreate(taskConsume3, (signed char *)"TaskConsume3", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+		
+	xTaskCreate(taskConsume4, (signed char *)"TaskConsume4", 
 		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
 	
 	/* start the scheduler */

@@ -220,190 +220,193 @@ LOAD /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/crt0.o
                 0x0000000000000408        0x4 LONG 0xffffffff
                 0x000000000000040c        0x4 LONG 0xfffffffe
 
-.text           0x0000000000000410     0x3790
+.text           0x0000000000000410     0x391c
  *(.text .text.* .gnu.linkonce.t.*)
- .text          0x0000000000000410      0x4d4 main.o
-                0x000000000000043c                irclk_ini
-                0x0000000000000458                init_buttons
-                0x00000000000004d4                taskDisplayData
-                0x0000000000000530                taskCreate1
-                0x000000000000058c                taskCreate2
-                0x00000000000005e8                taskCreate3
-                0x0000000000000644                taskConsume1
-                0x000000000000069c                taskConsume2
-                0x00000000000006f4                taskConsume3
-                0x000000000000074c                PORTDIntHandler
-                0x00000000000007dc                main
- .text          0x00000000000008e4       0x68 startup.o
-                0x00000000000008e4                RTCSIntHandler
-                0x00000000000008e4                FTM1IntHandler
-                0x00000000000008e4                USBOTGIntHandler
-                0x00000000000008e4                UART0SEIntHandler
-                0x00000000000008e4                UART2SEIntHandler
-                0x00000000000008e4                FTM2IntHandler
-                0x00000000000008e4                I2C1IntHandler
-                0x00000000000008e4                Default_ResetHandler
-                0x00000000000008e4                DMA1IntHandler
-                0x00000000000008e4                DACIntHandler
-                0x00000000000008e4                ACMPIntHandler
-                0x00000000000008e4                ResetHandler
-                0x00000000000008e4                LVDIntHandler
-                0x00000000000008e4                PORTAIntHandler
-                0x00000000000008e4                SPI1IntHandler
-                0x00000000000008e4                FTFAIntHandler
-                0x00000000000008e4                UART1SEIntHandler
-                0x00000000000008e4                ADCIntHandler
-                0x00000000000008e4                DMA0IntHandler
-                0x00000000000008e4                I2C0IntHandler
-                0x00000000000008e4                FTM0IntHandler
-                0x00000000000008e4                LLWUIntHandler
-                0x00000000000008e4                MCGIntHandler
-                0x00000000000008e4                RTCAIntHandler
-                0x00000000000008e4                SPI0IntHandler
-                0x00000000000008e4                TSIIntHandler
-                0x00000000000008e4                LPTMRIntHandler
-                0x00000000000008e4                PITIntHandler
-                0x00000000000008e4                DMA3IntHandler
-                0x00000000000008e4                DMA2IntHandler
-                0x0000000000000944                HardFaultIntHandler
-                0x0000000000000944                BusFaultIntHandler
-                0x0000000000000944                NMIIntHandler
-                0x0000000000000944                UsageFaultIntHandler
-                0x0000000000000944                MemManageIntHandler
-                0x0000000000000944                DebugMonIntHandler
- .text          0x000000000000094c      0x152 freertos/list.o
-                0x000000000000094c                vListInitialise
-                0x0000000000000988                vListInitialiseItem
-                0x000000000000099e                vListInsertEnd
-                0x00000000000009e2                vListInsert
-                0x0000000000000a4e                uxListRemove
- *fill*         0x0000000000000a9e        0x2 
- .text          0x0000000000000aa0      0xf74 freertos/queue.o
-                0x0000000000000aa0                xQueueGenericReset
-                0x0000000000000b48                xQueueGenericCreate
-                0x0000000000000c24                xQueueCreateMutex
-                0x0000000000000c5c                xQueueGiveMutexRecursive
-                0x0000000000000cb2                xQueueTakeMutexRecursive
-                0x0000000000000d12                xQueueGenericSend
-                0x0000000000000e7e                xQueueGenericSendFromISR
-                0x0000000000000f60                xQueueGiveFromISR
-                0x000000000000102a                xQueueReceive
-                0x0000000000001178                xQueueSemaphoreTake
-                0x0000000000001314                xQueuePeek
-                0x0000000000001466                xQueueReceiveFromISR
-                0x000000000000152c                xQueuePeekFromISR
-                0x00000000000015b0                uxQueueMessagesWaiting
-                0x00000000000015da                uxQueueSpacesAvailable
-                0x000000000000160e                uxQueueMessagesWaitingFromISR
-                0x0000000000001630                vQueueDelete
-                0x0000000000001894                xQueueIsQueueEmptyFromISR
-                0x00000000000018f2                xQueueIsQueueFullFromISR
-                0x0000000000001924                vQueueAddToRegistry
-                0x0000000000001974                pcQueueGetName
-                0x00000000000019c0                vQueueUnregisterQueue
- .text          0x0000000000001a14     0x13bc freertos/tasks.o
-                0x0000000000001a14                xTaskCreate
-                0x0000000000001c60                vTaskDelayUntil
-                0x0000000000001d18                vTaskDelay
-                0x0000000000001d64                vTaskStartScheduler
-                0x0000000000001dd0                vTaskEndScheduler
-                0x0000000000001dec                vTaskSuspendAll
-                0x0000000000001e04                xTaskResumeAll
-                0x0000000000001f1c                xTaskGetTickCount
-                0x0000000000001f38                xTaskGetTickCountFromISR
-                0x0000000000001f58                uxTaskGetNumberOfTasks
-                0x0000000000001f6c                pcTaskGetName
-                0x0000000000001fa0                xTaskIncrementTick
-                0x0000000000002108                vTaskSwitchContext
-                0x00000000000021ac                vTaskPlaceOnEventList
-                0x00000000000021e8                vTaskPlaceOnUnorderedEventList
-                0x0000000000002244                xTaskRemoveFromEventList
-                0x00000000000022fc                vTaskRemoveFromUnorderedEventList
-                0x00000000000023a0                vTaskSetTimeOutState
-                0x00000000000023dc                vTaskInternalSetTimeOutState
-                0x0000000000002404                xTaskCheckForTimeOut
-                0x0000000000002498                vTaskMissedYield
-                0x000000000000258c                xTaskGetCurrentTaskHandle
-                0x00000000000025a8                xTaskPriorityInherit
-                0x0000000000002684                xTaskPriorityDisinherit
-                0x000000000000273c                vTaskPriorityDisinheritAfterTimeout
-                0x0000000000002824                uxTaskResetEventItemValue
-                0x0000000000002850                pvTaskIncrementMutexHeldCount
-                0x0000000000002874                ulTaskNotifyTake
-                0x00000000000028f8                xTaskNotifyWait
-                0x00000000000029a0                xTaskGenericNotify
-                0x0000000000002ab8                xTaskGenericNotifyFromISR
-                0x0000000000002c0c                vTaskNotifyGiveFromISR
-                0x0000000000002cfc                xTaskNotifyStateClear
- .text          0x0000000000002dd0      0x1fc freertos/portable/MemMang/heap_2.o
-                0x0000000000002dd0                pvPortMalloc
-                0x0000000000002eec                vPortFree
-                0x0000000000002f60                xPortGetFreeHeapSize
-                0x0000000000002f74                vPortInitialiseBlocks
- *fill*         0x0000000000002fcc        0x4 
- .text          0x0000000000002fd0      0x24c freertos/portable/GCC/ARM_CM0/port.o
-                0x0000000000002fd0                pxPortInitialiseStack
-                0x0000000000003054                vPortSVCHandler
-                0x0000000000003086                xPortStartScheduler
-                0x00000000000030cc                vPortEndScheduler
-                0x00000000000030ec                vPortYield
-                0x000000000000310c                vPortEnterCritical
-                0x0000000000003130                vPortExitCritical
-                0x0000000000003160                ulSetInterruptMaskFromISR
-                0x000000000000316c                vClearInterruptMaskFromISR
-                0x0000000000003174                xPortPendSVHandler
-                0x00000000000031c6                xPortSysTickHandler
-                0x00000000000031f8                prvSetupTimerInterrupt
- .text          0x000000000000321c      0x788 includes/lcd.o
-                0x000000000000321c                lcd_ini
-                0x0000000000003380                lcd_set
-                0x00000000000036f0                divide
-                0x000000000000371c                lcd_display_dec
-                0x00000000000037ec                lcd_display_hex
-                0x0000000000003852                lcd_display_time
-                0x0000000000003934                lcd_display_error
- .text          0x00000000000039a4      0x120 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
-                0x00000000000039a4                memcpy
+ .text          0x0000000000000410      0x644 main.o
+                0x000000000000043c                initMutex
+                0x0000000000000460                irclk_ini
+                0x000000000000047c                init_buttons
+                0x00000000000004f8                taskDisplayData
+                0x000000000000054c                taskCreate1
+                0x00000000000005b8                taskCreate2
+                0x0000000000000624                taskCreate3
+                0x0000000000000690                taskCreate4
+                0x00000000000006fc                taskConsume1
+                0x0000000000000764                taskConsume2
+                0x00000000000007cc                taskConsume3
+                0x0000000000000834                taskConsume4
+                0x000000000000089c                PORTDIntHandler
+                0x000000000000092c                main
+ .text          0x0000000000000a54       0x68 startup.o
+                0x0000000000000a54                RTCSIntHandler
+                0x0000000000000a54                FTM1IntHandler
+                0x0000000000000a54                USBOTGIntHandler
+                0x0000000000000a54                UART0SEIntHandler
+                0x0000000000000a54                UART2SEIntHandler
+                0x0000000000000a54                FTM2IntHandler
+                0x0000000000000a54                I2C1IntHandler
+                0x0000000000000a54                Default_ResetHandler
+                0x0000000000000a54                DMA1IntHandler
+                0x0000000000000a54                DACIntHandler
+                0x0000000000000a54                ACMPIntHandler
+                0x0000000000000a54                ResetHandler
+                0x0000000000000a54                LVDIntHandler
+                0x0000000000000a54                PORTAIntHandler
+                0x0000000000000a54                SPI1IntHandler
+                0x0000000000000a54                FTFAIntHandler
+                0x0000000000000a54                UART1SEIntHandler
+                0x0000000000000a54                ADCIntHandler
+                0x0000000000000a54                DMA0IntHandler
+                0x0000000000000a54                I2C0IntHandler
+                0x0000000000000a54                FTM0IntHandler
+                0x0000000000000a54                LLWUIntHandler
+                0x0000000000000a54                MCGIntHandler
+                0x0000000000000a54                RTCAIntHandler
+                0x0000000000000a54                SPI0IntHandler
+                0x0000000000000a54                TSIIntHandler
+                0x0000000000000a54                LPTMRIntHandler
+                0x0000000000000a54                PITIntHandler
+                0x0000000000000a54                DMA3IntHandler
+                0x0000000000000a54                DMA2IntHandler
+                0x0000000000000ab4                HardFaultIntHandler
+                0x0000000000000ab4                BusFaultIntHandler
+                0x0000000000000ab4                NMIIntHandler
+                0x0000000000000ab4                UsageFaultIntHandler
+                0x0000000000000ab4                MemManageIntHandler
+                0x0000000000000ab4                DebugMonIntHandler
+ .text          0x0000000000000abc      0x152 freertos/list.o
+                0x0000000000000abc                vListInitialise
+                0x0000000000000af8                vListInitialiseItem
+                0x0000000000000b0e                vListInsertEnd
+                0x0000000000000b52                vListInsert
+                0x0000000000000bbe                uxListRemove
+ *fill*         0x0000000000000c0e        0x2 
+ .text          0x0000000000000c10      0xf74 freertos/queue.o
+                0x0000000000000c10                xQueueGenericReset
+                0x0000000000000cb8                xQueueGenericCreate
+                0x0000000000000d94                xQueueCreateMutex
+                0x0000000000000dcc                xQueueGiveMutexRecursive
+                0x0000000000000e22                xQueueTakeMutexRecursive
+                0x0000000000000e82                xQueueGenericSend
+                0x0000000000000fee                xQueueGenericSendFromISR
+                0x00000000000010d0                xQueueGiveFromISR
+                0x000000000000119a                xQueueReceive
+                0x00000000000012e8                xQueueSemaphoreTake
+                0x0000000000001484                xQueuePeek
+                0x00000000000015d6                xQueueReceiveFromISR
+                0x000000000000169c                xQueuePeekFromISR
+                0x0000000000001720                uxQueueMessagesWaiting
+                0x000000000000174a                uxQueueSpacesAvailable
+                0x000000000000177e                uxQueueMessagesWaitingFromISR
+                0x00000000000017a0                vQueueDelete
+                0x0000000000001a04                xQueueIsQueueEmptyFromISR
+                0x0000000000001a62                xQueueIsQueueFullFromISR
+                0x0000000000001a94                vQueueAddToRegistry
+                0x0000000000001ae4                pcQueueGetName
+                0x0000000000001b30                vQueueUnregisterQueue
+ .text          0x0000000000001b84     0x13bc freertos/tasks.o
+                0x0000000000001b84                xTaskCreate
+                0x0000000000001dd0                vTaskDelayUntil
+                0x0000000000001e88                vTaskDelay
+                0x0000000000001ed4                vTaskStartScheduler
+                0x0000000000001f40                vTaskEndScheduler
+                0x0000000000001f5c                vTaskSuspendAll
+                0x0000000000001f74                xTaskResumeAll
+                0x000000000000208c                xTaskGetTickCount
+                0x00000000000020a8                xTaskGetTickCountFromISR
+                0x00000000000020c8                uxTaskGetNumberOfTasks
+                0x00000000000020dc                pcTaskGetName
+                0x0000000000002110                xTaskIncrementTick
+                0x0000000000002278                vTaskSwitchContext
+                0x000000000000231c                vTaskPlaceOnEventList
+                0x0000000000002358                vTaskPlaceOnUnorderedEventList
+                0x00000000000023b4                xTaskRemoveFromEventList
+                0x000000000000246c                vTaskRemoveFromUnorderedEventList
+                0x0000000000002510                vTaskSetTimeOutState
+                0x000000000000254c                vTaskInternalSetTimeOutState
+                0x0000000000002574                xTaskCheckForTimeOut
+                0x0000000000002608                vTaskMissedYield
+                0x00000000000026fc                xTaskGetCurrentTaskHandle
+                0x0000000000002718                xTaskPriorityInherit
+                0x00000000000027f4                xTaskPriorityDisinherit
+                0x00000000000028ac                vTaskPriorityDisinheritAfterTimeout
+                0x0000000000002994                uxTaskResetEventItemValue
+                0x00000000000029c0                pvTaskIncrementMutexHeldCount
+                0x00000000000029e4                ulTaskNotifyTake
+                0x0000000000002a68                xTaskNotifyWait
+                0x0000000000002b10                xTaskGenericNotify
+                0x0000000000002c28                xTaskGenericNotifyFromISR
+                0x0000000000002d7c                vTaskNotifyGiveFromISR
+                0x0000000000002e6c                xTaskNotifyStateClear
+ .text          0x0000000000002f40      0x1fc freertos/portable/MemMang/heap_2.o
+                0x0000000000002f40                pvPortMalloc
+                0x000000000000305c                vPortFree
+                0x00000000000030d0                xPortGetFreeHeapSize
+                0x00000000000030e4                vPortInitialiseBlocks
+ *fill*         0x000000000000313c        0x4 
+ .text          0x0000000000003140      0x24c freertos/portable/GCC/ARM_CM0/port.o
+                0x0000000000003140                pxPortInitialiseStack
+                0x00000000000031c4                vPortSVCHandler
+                0x00000000000031f6                xPortStartScheduler
+                0x000000000000323c                vPortEndScheduler
+                0x000000000000325c                vPortYield
+                0x000000000000327c                vPortEnterCritical
+                0x00000000000032a0                vPortExitCritical
+                0x00000000000032d0                ulSetInterruptMaskFromISR
+                0x00000000000032dc                vClearInterruptMaskFromISR
+                0x00000000000032e4                xPortPendSVHandler
+                0x0000000000003336                xPortSysTickHandler
+                0x0000000000003368                prvSetupTimerInterrupt
+ .text          0x000000000000338c      0x788 includes/lcd.o
+                0x000000000000338c                lcd_ini
+                0x00000000000034f0                lcd_set
+                0x0000000000003860                divide
+                0x000000000000388c                lcd_display_dec
+                0x000000000000395c                lcd_display_hex
+                0x00000000000039c2                lcd_display_time
+                0x0000000000003aa4                lcd_display_error
+ .text          0x0000000000003b14      0x120 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
+                0x0000000000003b14                memcpy
  *(.glue_7t)
- .glue_7t       0x0000000000003ac4        0x0 linker stubs
+ .glue_7t       0x0000000000003c34        0x0 linker stubs
  *(.glue_7)
- .glue_7        0x0000000000003ac4        0x0 linker stubs
+ .glue_7        0x0000000000003c34        0x0 linker stubs
  *(.rodata .rodata* .gnu.linkonce.r.*)
- .rodata        0x0000000000003ac4       0x61 main.o
- *fill*         0x0000000000003b25        0x3 
- .rodata        0x0000000000003b28       0x30 freertos/tasks.o
- .rodata        0x0000000000003b58       0x48 includes/lcd.o
+ .rodata        0x0000000000003c34       0x7d main.o
+ *fill*         0x0000000000003cb1        0x3 
+ .rodata        0x0000000000003cb4       0x30 freertos/tasks.o
+ .rodata        0x0000000000003ce4       0x48 includes/lcd.o
 
-.vfp11_veneer   0x0000000000003ba0        0x0
- .vfp11_veneer  0x0000000000003ba0        0x0 linker stubs
+.vfp11_veneer   0x0000000000003d2c        0x0
+ .vfp11_veneer  0x0000000000003d2c        0x0 linker stubs
 
-.v4_bx          0x0000000000003ba0        0x0
- .v4_bx         0x0000000000003ba0        0x0 linker stubs
+.v4_bx          0x0000000000003d2c        0x0
+ .v4_bx         0x0000000000003d2c        0x0 linker stubs
 
-.init           0x0000000000003ba0        0xc
- .init          0x0000000000003ba0        0xc /usr/lib/gcc/arm-none-eabi/10.3.1/crti.o
-                0x0000000000003ba0                _init
+.init           0x0000000000003d2c        0xc
+ .init          0x0000000000003d2c        0xc /usr/lib/gcc/arm-none-eabi/10.3.1/crti.o
+                0x0000000000003d2c                _init
 
-.fini           0x0000000000003bac        0xc
- .fini          0x0000000000003bac        0xc /usr/lib/gcc/arm-none-eabi/10.3.1/crti.o
-                0x0000000000003bac                _fini
+.fini           0x0000000000003d38        0xc
+ .fini          0x0000000000003d38        0xc /usr/lib/gcc/arm-none-eabi/10.3.1/crti.o
+                0x0000000000003d38                _fini
 
-.iplt           0x0000000000003bb8        0x0
- .iplt          0x0000000000003bb8        0x0 main.o
+.iplt           0x0000000000003d44        0x0
+ .iplt          0x0000000000003d44        0x0 main.o
 
-.rel.dyn        0x0000000000003bb8        0x0
- .rel.iplt      0x0000000000003bb8        0x0 main.o
+.rel.dyn        0x0000000000003d44        0x0
+ .rel.iplt      0x0000000000003d44        0x0 main.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x0000000000003bb8                . = ALIGN (0x4)
-                0x0000000000003bb8                _etext = .
-                0x0000000000003bb8                _sidata = .
+                0x0000000000003d44                . = ALIGN (0x4)
+                0x0000000000003d44                _etext = .
+                0x0000000000003d44                _sidata = .
 
-.data           0x000000001fffe000        0x8 load address 0x0000000000003bb8
+.data           0x000000001fffe000        0x8 load address 0x0000000000003d44
                 0x000000001fffe000                _sdata = .
  *(.data .data.*)
  .data          0x000000001fffe000        0x4 freertos/portable/MemMang/heap_2.o
@@ -411,17 +414,17 @@ LOAD /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/crt0.o
                 0x000000001fffe008                . = ALIGN (0x4)
                 0x000000001fffe008                _edata = .
 
-.igot.plt       0x000000001fffe008        0x0 load address 0x0000000000003bc0
+.igot.plt       0x000000001fffe008        0x0 load address 0x0000000000003d4c
  .igot.plt      0x000000001fffe008        0x0 main.o
 
-.bss            0x000000001fffe008     0x3134 load address 0x0000000000003bc0
+.bss            0x000000001fffe008     0x3134 load address 0x0000000000003d4c
                 0x000000001fffe008                _sbss = .
  *(.bss .bss.*)
  .bss           0x000000001fffe008        0x8 main.o
                 0x000000001fffe008                creadores
                 0x000000001fffe009                consumidores
                 0x000000001fffe00a                datos_pendentes
-                0x000000001fffe00c                cola
+                0x000000001fffe00c                datosMutex
  .bss           0x000000001fffe010       0x40 freertos/queue.o
                 0x000000001fffe010                xQueueRegistry
  .bss           0x000000001fffe050       0xd8 freertos/tasks.o
@@ -431,7 +434,7 @@ LOAD /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/crt0.o
                 0x000000002000113c                . = ALIGN (0x4)
                 0x000000002000113c                _ebss = .
 
-.co_stack       0x000000002000113c      0x404 load address 0x0000000000006cf4
+.co_stack       0x000000002000113c      0x404 load address 0x0000000000006e80
                 0x0000000020001140                . = ALIGN (0x8)
  *fill*         0x000000002000113c        0x4 
                 0x0000000020001540                . = (. + STACK_SIZE)
@@ -495,27 +498,27 @@ LOAD linker stubs
  .comment       0x0000000000000033       0x34 includes/lcd.o
  .comment       0x0000000000000033       0x34 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
 
-.debug_info     0x0000000000000000     0x390c
- .debug_info    0x0000000000000000      0x931 main.o
- .debug_info    0x0000000000000931       0xfc startup.o
- .debug_info    0x0000000000000a2d      0x2b6 freertos/list.o
- .debug_info    0x0000000000000ce3      0xef8 freertos/queue.o
- .debug_info    0x0000000000001bdb     0x10ff freertos/tasks.o
- .debug_info    0x0000000000002cda      0x2d2 freertos/portable/MemMang/heap_2.o
- .debug_info    0x0000000000002fac      0x269 freertos/portable/GCC/ARM_CM0/port.o
- .debug_info    0x0000000000003215      0x59b includes/lcd.o
- .debug_info    0x00000000000037b0      0x15c /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
+.debug_info     0x0000000000000000     0x399c
+ .debug_info    0x0000000000000000      0x9c1 main.o
+ .debug_info    0x00000000000009c1       0xfc startup.o
+ .debug_info    0x0000000000000abd      0x2b6 freertos/list.o
+ .debug_info    0x0000000000000d73      0xef8 freertos/queue.o
+ .debug_info    0x0000000000001c6b     0x10ff freertos/tasks.o
+ .debug_info    0x0000000000002d6a      0x2d2 freertos/portable/MemMang/heap_2.o
+ .debug_info    0x000000000000303c      0x269 freertos/portable/GCC/ARM_CM0/port.o
+ .debug_info    0x00000000000032a5      0x59b includes/lcd.o
+ .debug_info    0x0000000000003840      0x15c /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
 
-.debug_abbrev   0x0000000000000000      0xd70
- .debug_abbrev  0x0000000000000000      0x1ea main.o
- .debug_abbrev  0x00000000000001ea       0xb3 startup.o
- .debug_abbrev  0x000000000000029d       0xe8 freertos/list.o
- .debug_abbrev  0x0000000000000385      0x21d freertos/queue.o
- .debug_abbrev  0x00000000000005a2      0x263 freertos/tasks.o
- .debug_abbrev  0x0000000000000805      0x159 freertos/portable/MemMang/heap_2.o
- .debug_abbrev  0x000000000000095e      0x196 freertos/portable/GCC/ARM_CM0/port.o
- .debug_abbrev  0x0000000000000af4      0x1b5 includes/lcd.o
- .debug_abbrev  0x0000000000000ca9       0xc7 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
+.debug_abbrev   0x0000000000000000      0xd7f
+ .debug_abbrev  0x0000000000000000      0x1f9 main.o
+ .debug_abbrev  0x00000000000001f9       0xb3 startup.o
+ .debug_abbrev  0x00000000000002ac       0xe8 freertos/list.o
+ .debug_abbrev  0x0000000000000394      0x21d freertos/queue.o
+ .debug_abbrev  0x00000000000005b1      0x263 freertos/tasks.o
+ .debug_abbrev  0x0000000000000814      0x159 freertos/portable/MemMang/heap_2.o
+ .debug_abbrev  0x000000000000096d      0x196 freertos/portable/GCC/ARM_CM0/port.o
+ .debug_abbrev  0x0000000000000b03      0x1b5 includes/lcd.o
+ .debug_abbrev  0x0000000000000cb8       0xc7 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
 
 .debug_aranges  0x0000000000000000      0x120
  .debug_aranges
@@ -537,47 +540,47 @@ LOAD linker stubs
  .debug_aranges
                 0x0000000000000100       0x20 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
 
-.debug_line     0x0000000000000000     0x2342
- .debug_line    0x0000000000000000      0x2a7 main.o
- .debug_line    0x00000000000002a7       0x79 startup.o
- .debug_line    0x0000000000000320      0x186 freertos/list.o
- .debug_line    0x00000000000004a6      0xa3f freertos/queue.o
- .debug_line    0x0000000000000ee5      0xad4 freertos/tasks.o
- .debug_line    0x00000000000019b9      0x1d0 freertos/portable/MemMang/heap_2.o
- .debug_line    0x0000000000001b89      0x1d5 freertos/portable/GCC/ARM_CM0/port.o
- .debug_line    0x0000000000001d5e      0x42a includes/lcd.o
- .debug_line    0x0000000000002188      0x1ba /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
+.debug_line     0x0000000000000000     0x23a8
+ .debug_line    0x0000000000000000      0x30d main.o
+ .debug_line    0x000000000000030d       0x79 startup.o
+ .debug_line    0x0000000000000386      0x186 freertos/list.o
+ .debug_line    0x000000000000050c      0xa3f freertos/queue.o
+ .debug_line    0x0000000000000f4b      0xad4 freertos/tasks.o
+ .debug_line    0x0000000000001a1f      0x1d0 freertos/portable/MemMang/heap_2.o
+ .debug_line    0x0000000000001bef      0x1d5 freertos/portable/GCC/ARM_CM0/port.o
+ .debug_line    0x0000000000001dc4      0x42a includes/lcd.o
+ .debug_line    0x00000000000021ee      0x1ba /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
 
-.debug_str      0x0000000000000000     0x19f3
- .debug_str     0x0000000000000000      0x56d main.o
-                                        0x5b6 (size before relaxing)
- .debug_str     0x000000000000056d       0x7f startup.o
+.debug_str      0x0000000000000000     0x1a2e
+ .debug_str     0x0000000000000000      0x5a8 main.o
+                                        0x5f1 (size before relaxing)
+ .debug_str     0x00000000000005a8       0x7f startup.o
                                         0x14c (size before relaxing)
- .debug_str     0x00000000000005ec      0x139 freertos/list.o
+ .debug_str     0x0000000000000627      0x139 freertos/list.o
                                         0x29b (size before relaxing)
- .debug_str     0x0000000000000725      0x53c freertos/queue.o
+ .debug_str     0x0000000000000760      0x53c freertos/queue.o
                                         0x791 (size before relaxing)
- .debug_str     0x0000000000000c61      0x8bc freertos/tasks.o
+ .debug_str     0x0000000000000c9c      0x8bc freertos/tasks.o
                                         0xb76 (size before relaxing)
- .debug_str     0x000000000000151d      0x157 freertos/portable/MemMang/heap_2.o
+ .debug_str     0x0000000000001558      0x157 freertos/portable/MemMang/heap_2.o
                                         0x2d1 (size before relaxing)
- .debug_str     0x0000000000001674      0x170 freertos/portable/GCC/ARM_CM0/port.o
+ .debug_str     0x00000000000016af      0x170 freertos/portable/GCC/ARM_CM0/port.o
                                         0x313 (size before relaxing)
- .debug_str     0x00000000000017e4       0xec includes/lcd.o
+ .debug_str     0x000000000000181f       0xec includes/lcd.o
                                         0x329 (size before relaxing)
- .debug_str     0x00000000000018d0      0x123 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
+ .debug_str     0x000000000000190b      0x123 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
                                         0x1bf (size before relaxing)
 
-.debug_frame    0x0000000000000000      0xe88
- .debug_frame   0x0000000000000000      0x184 main.o
- .debug_frame   0x0000000000000184       0x4c startup.o
- .debug_frame   0x00000000000001d0       0xb0 freertos/list.o
- .debug_frame   0x0000000000000280      0x3d0 freertos/queue.o
- .debug_frame   0x0000000000000650      0x4f8 freertos/tasks.o
- .debug_frame   0x0000000000000b48       0xa8 freertos/portable/MemMang/heap_2.o
- .debug_frame   0x0000000000000bf0      0x174 freertos/portable/GCC/ARM_CM0/port.o
- .debug_frame   0x0000000000000d64       0xec includes/lcd.o
- .debug_frame   0x0000000000000e50       0x38 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
+.debug_frame    0x0000000000000000      0xee4
+ .debug_frame   0x0000000000000000      0x1e0 main.o
+ .debug_frame   0x00000000000001e0       0x4c startup.o
+ .debug_frame   0x000000000000022c       0xb0 freertos/list.o
+ .debug_frame   0x00000000000002dc      0x3d0 freertos/queue.o
+ .debug_frame   0x00000000000006ac      0x4f8 freertos/tasks.o
+ .debug_frame   0x0000000000000ba4       0xa8 freertos/portable/MemMang/heap_2.o
+ .debug_frame   0x0000000000000c4c      0x174 freertos/portable/GCC/ARM_CM0/port.o
+ .debug_frame   0x0000000000000dc0       0xec includes/lcd.o
+ .debug_frame   0x0000000000000eac       0x38 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
 
 .debug_loc      0x0000000000000000      0x221
  .debug_loc     0x0000000000000000      0x221 /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/libc_nano.a(lib_a-memcpy-stub.o)
