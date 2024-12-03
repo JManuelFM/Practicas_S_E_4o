@@ -382,9 +382,9 @@ void lcd_display_time(uint8_t value1, uint8_t value2)
    lcd_display_error(0x10);
   } else {
     lcd_set(divide(value1, 10), 1);
-    lcd_set(value1 % 10, 2);
+    lcd_set(value1 - (divide(value1, 10) * 10), 2);
     lcd_set(divide(value2, 10), 3);
-    lcd_set(value2 % 10, 4);
+    lcd_set(value2 - (divide(value2, 10) * 10), 4);
     SegLCD_Col_On();
   }
 }

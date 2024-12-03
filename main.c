@@ -2,19 +2,14 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "lcd.h"
-
+#include "queue.h"
   
 
 volatile uint8_t creadores = 0;
 volatile uint8_t consumidores = 0;
 volatile uint8_t datos_pendentes = 0;
 
-void delay(void)
-{
-  volatile int i;
-
-  for (i = 0; i < 1000000; i++);
-}
+QueueHandle_t cola;
 
 void irclk_ini()
 {
@@ -42,86 +37,158 @@ void init_buttons(){
     PORTC->PCR[12] |= PORT_PCR_IRQC(0xA);
 }
 
-void led_green_init()
-{
-	SIM_COPC = 0;
-	SIM_SCGC5 |= SIM_SCGC5_PORTD_MASK;
-	PORTD_PCR5 = PORT_PCR_MUX(1);
-	GPIOD_PDDR |= (1 << 5);
-	GPIOD_PSOR = (1 << 5);
-}
-
-void led_green_toggle()
-{
-	GPIOD_PTOR = (1 << 5);
-}
-
-void led_red_init()
-{
-	SIM_COPC = 0;
-	SIM_SCGC5 |= SIM_SCGC5_PORTE_MASK;
-	PORTE_PCR29 = PORT_PCR_MUX(1);
-	GPIOE_PDDR |= (1 << 29);
-	GPIOE_PSOR = (1 << 29);
-}
-
-void led_red_toggle(void)
-{
-	GPIOE_PTOR = (1 << 29);
-}
-
-void taskLedGreen(void *pvParameters)
-{
-    for (;;) {
-        led_green_toggle();
-        vTaskDelay(200/portTICK_RATE_MS);
-    }
-}
-
-void taskLedRed(void *pvParameters)
-{
-    for (;;) {
-        led_red_toggle();
-        vTaskDelay(500/portTICK_RATE_MS);
-    }
-}
-
 void taskDisplayData(void *pvParameters){
+	int dataleft, creators, consumers;
 	for(;;){
-	  lcd_display_dec(datos_pendentes * 100 + creadores * 10 + consumidores);
-	  vTaskDelay(200/portTICK_RATE_MS);
+	  taskENTER_CRITICAL();
+	  dataleft = datos_pendentes;
+	  creators = creadores;
+	  consumers = consumidores;
+	  
+	  lcd_display_time(dataleft, creators * 10 + consumers);
+	  taskEXIT_CRITICAL();
+	  vTaskDelay(100/portTICK_RATE_MS);
 	}
 }
 
-void PORTC_PORTD_IRQHandler(void){
+void taskCreate1(void *pvParameters){
+	for(;;){
+	  //crea datos
+	  if (creadores > 0){
+	    uint32_t dato = 1; // Dato a enviar
+	    if (uxQueueSpacesAvailable(cola) > 0) { // Verifica si hay espacio en la cola
+	      if (xQueueSend(cola, &dato, 0) == pdTRUE) { // Envía el dato sin bloquear
+        	datos_pendentes++;
+    	      }
+	    }
+	  }
+	  vTaskDelay(100/portTICK_RATE_MS);
+	}
+}
+
+void taskCreate2(void *pvParameters){
+	for(;;){
+	  //crea datos
+	  if (creadores > 1){
+	    uint32_t dato = 2; // Dato a enviar
+	    if (uxQueueSpacesAvailable(cola) > 0) { // Verifica si hay espacio en la cola
+	      if (xQueueSend(cola, &dato, 0) == pdTRUE) { // Envía el dato sin bloquear
+        	datos_pendentes++;
+    	      }
+	    }
+	  }
+	  vTaskDelay(100/portTICK_RATE_MS);
+	}
+}
+
+void taskCreate3(void *pvParameters){
+	for(;;){
+	  //crea datos
+	  if (creadores > 2){
+	    uint32_t dato = 3; // Dato a enviar
+	    if (uxQueueSpacesAvailable(cola) > 0) { // Verifica si hay espacio en la cola
+	      if (xQueueSend(cola, &dato, 0) == pdTRUE) { // Envía el dato sin bloquear
+        	datos_pendentes++;
+    	      }
+	    }
+	  }
+	  vTaskDelay(100/portTICK_RATE_MS);
+	}
+}
+
+void taskConsume1(void *pvParameters){
+	for(;;){
+	  //consume datos
+	  if (consumidores > 0){
+	    uint32_t datoRecibido;
+	    if (uxQueueMessagesWaiting(cola) > 0) { // Verifica si hay datos en la cola
+    	      if (xQueueReceive(cola, &datoRecibido, 0) == pdTRUE) { // Recibe el dato sin bloquear
+        	datos_pendentes--;
+    	      }
+	    }
+	  }
+	  vTaskDelay(100/portTICK_RATE_MS);
+	}
+}
+
+void taskConsume2(void *pvParameters){
+	for(;;){
+	  //consume datos
+	  if (consumidores > 1){
+	    uint32_t datoRecibido;
+	    if (uxQueueMessagesWaiting(cola) > 0) { // Verifica si hay datos en la cola
+    	      if (xQueueReceive(cola, &datoRecibido, 0) == pdTRUE) { // Recibe el dato sin bloquear
+        	datos_pendentes--;
+    	      }
+	    }
+	  }
+	  vTaskDelay(100/portTICK_RATE_MS);
+	}
+}
+
+void taskConsume3(void *pvParameters){
+	for(;;){
+	  //consume datos
+	  if (consumidores > 2){
+	    uint32_t datoRecibido;
+	    if (uxQueueMessagesWaiting(cola) > 0) { // Verifica si hay datos en la cola
+    	      if (xQueueReceive(cola, &datoRecibido, 0) == pdTRUE) { // Recibe el dato sin bloquear
+        	datos_pendentes--;
+    	      }
+	    }
+	  }
+	  vTaskDelay(100/portTICK_RATE_MS);
+	}
+}
+
+void PORTDIntHandler(void){
     if(PORTC->ISFR & (1<<12)){ //si botón derecho
-      consumidores = (consumidores+1)%4;
+      consumidores++;
+      if(consumidores == 4) consumidores = 0;
       PORTC->ISFR |= (1 << 12);
     }else if(PORTC->ISFR & (1<<3)){ //si botón izquierdo
-      creadores = (creadores+1)%4;
+      creadores++;
+      if(creadores == 4) creadores = 0;
       PORTC->ISFR |= (1 << 3);
     }
 }
 
 int main(void)
 {
-	led_green_init();
-	led_red_init();
 	init_buttons();
 	
 	irclk_ini();
 	
 	lcd_ini();
-
-	/* create green led task */
-	xTaskCreate(taskLedGreen, (signed char *)"TaskLedGreen", 
-		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
-
-	/* create red led task */
-	xTaskCreate(taskLedRed, (signed char *)"TaskLedRed", 
-		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+	
+	SIM->COPC = 0;
+	
+	cola = xQueueCreate(99, sizeof(uint32_t));
+	
+        if (cola == NULL) {
+          // Error al crear la cola
+          while (1);
+        }
 		
 	xTaskCreate(taskDisplayData, (signed char *)"TaskDisplayData", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+		
+	xTaskCreate(taskCreate1, (signed char *)"TaskCreate1", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+		
+	xTaskCreate(taskCreate2, (signed char *)"TaskCreate2", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+		
+	xTaskCreate(taskCreate3, (signed char *)"TaskCreate3", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+		
+	xTaskCreate(taskConsume1, (signed char *)"TaskConsume1", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+		
+	xTaskCreate(taskConsume2, (signed char *)"TaskConsume2", 
+		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
+		
+	xTaskCreate(taskConsume3, (signed char *)"TaskConsume3", 
 		configMINIMAL_STACK_SIZE, (void *)NULL, 1, NULL);
 	
 	/* start the scheduler */
