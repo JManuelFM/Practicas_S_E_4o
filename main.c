@@ -12,12 +12,14 @@
 // Enable IRCLK (Internal Reference Clock)
 // see Chapter 24 in MCU doc
 
+  
+unsigned int aa = 0;
+unsigned int ss = 0;
 
-unsigned int aciertos = 0;
-unsigned int fallos = 0;
-unsigned int redOn = 0;
-unsigned int greenOn = 0;
-unsigned int buttonPulsed = 0;
+unsigned int aSet = 0;
+unsigned int sSet = 0;
+
+unsigned int stopTimer = 0;
   
 void irclk_ini()
 {
@@ -29,7 +31,7 @@ void delay(void)
 {
   volatile int i;
 
-  for (i = 0; i < 1000000; i++);
+  for (i = 0; i < 500000; i++);
 }
 
 void init_buttons(){
@@ -67,75 +69,19 @@ void led_init()
     GPIOE->PSOR |= (1 << 29);     // Apagar o LED (pón o PTE29 en alto)
 }
 
-//para las interrupciones
-void PORTDIntHandler(void){
-    if(PORTC->ISFR & (1<<12)){ //si botón derecho
-      if(redOn){
-        aciertos++;
-      }else{
-        fallos++;
-      }
-      buttonPulsed = 1;
-    }else if(PORTC->ISFR & (1<<3)){ //si botón izquierdo
-      if(greenOn){
-        aciertos++;
-      }else{
-        fallos++;
-      }
-      buttonPulsed = 1;
-    }
-    
-    //actualizamos el contador
-    lcd_display_time(aciertos, fallos);
-    
-    //limpiamos los flag para que el interrupt deje de producirse
-    PORTC->ISFR |= (1 << 12);
-    PORTC->ISFR |= (1 << 3);
+void LPTMR_Init(void) {
+    SIM->SCGC5 |= SIM_SCGC5_LPTMR_MASK;  // Habilitar reloj para LPTMR
+
+    LPTMR0->CSR = 0;  // Desactivar temporizador antes de configurarlo
+    LPTMR0->PSR = LPTMR_PSR_PCS(1) | LPTMR_PSR_PBYP_MASK;  // Usar reloj LPO (1 kHz), sin divisor
+    LPTMR0->CMR = 1000;  // 1000 ticks = 1 segundo
+    LPTMR0->CSR = LPTMR_CSR_TIE_MASK | LPTMR_CSR_TEN_MASK;  // Activar con interrupción
+
+    NVIC_EnableIRQ(LPTMR0_IRQn);  // Activar interrupción para LPTMR
+    NVIC_SetPriority(LPTMR0_IRQn, 2);  // Prioridad baja
 }
 
-int main(void)
-{
-  irclk_ini(); // Enable internal ref clk to use by LCD
-  init_buttons();
-  led_init();
-
-  lcd_ini();
-  lcd_display_time(aciertos, fallos);
-  
-  SIM->COPC = 0;               // Desactivar Watchdog Timer
-
-  // 'Random' sequence :-)
-  volatile unsigned int sequence = 0x32B14D98,
-    index = 0;
-
-  while (index < 32) {
-    if (sequence & (1 << index)) { //odd
-      GPIOD->PCOR |= (1 << 5);      // Encender LED verde
-      GPIOE->PSOR |= (1 << 29);     // Apagar LED rojo
-      redOn = 0;
-      greenOn = 1;
-    } else { //even
-      GPIOD->PSOR |= (1 << 5);      // Apagar LED verde
-      GPIOE->PCOR |= (1 << 29);     // Encender LED rojo
-      redOn = 1;
-      greenOn = 0;
-    }
-    
-    delay();
-    index++;
-    
-    if(!buttonPulsed){
-      fallos++;
-      //actualizamos el contador
-      lcd_display_time(aciertos, fallos);
-    }
-    buttonPulsed = 0;
-  }
-  
-  //apagamos ambos LEDs
-  GPIOD->PSOR |= (1 << 5);
-  GPIOE->PSOR |= (1 << 29);
-
+void end_count(){
   while (1) {
     LCD->WF8B[LCD_FRONTPLANE0] = LCD_CLEAR;
     LCD->WF8B[LCD_FRONTPLANE1] = LCD_CLEAR;
@@ -146,9 +92,109 @@ int main(void)
     LCD->WF8B[LCD_FRONTPLANE6] = LCD_CLEAR;
     LCD->WF8B[LCD_FRONTPLANE7] = LCD_CLEAR;
     delay();
-    lcd_display_time(aciertos, fallos);
+    lcd_display_time(aa, ss);
     delay();
   }
+}
+
+void alarm(){
+  while(ss > 0){
+    GPIOD->PCOR |= (1 << 5);
+    GPIOE->PCOR |= (1 << 29);
+    
+    delay();
+    
+    GPIOD->PSOR |= (1 << 5);
+    GPIOE->PSOR |= (1 << 29);
+    
+    delay();
+  }
+  
+  GPIOD->PSOR |= (1 << 5);
+  GPIOE->PSOR |= (1 << 29);
+}
+
+void setA(){
+  aSet = 0;
+  GPIOE->PCOR |= (1 << 29);
+  while(!aSet){
+    lcd_display_time(aa, ss);
+  }
+  GPIOE->PSOR |= (1 << 29);
+}
+
+void setS(){
+  GPIOD->PCOR |= (1 << 5);
+  while(!sSet){
+    lcd_display_time(aa, ss);
+  }
+  GPIOD->PSOR |= (1 << 5);
+}
+
+//para las interrupciones por botones
+void PORTDIntHandler(void){
+    if(PORTC->ISFR & (1<<12)){ //botón derecho para cambiar ss/aa y para parar/reanudar timer
+      if(!sSet){
+        ss++;
+        ss = ss%100;
+      }
+      if(sSet && !aSet){
+        aa++;
+        aa = aa%100;
+      }
+      if(sSet && aSet){
+        stopTimer = !stopTimer;
+      }
+    }else if(PORTC->ISFR & (1<<3)){ //botón izquierdo para confirmar
+      if(!sSet){
+        sSet = 1;
+      }
+      if(sSet && !aSet){
+        aSet = 1;
+      }
+    }
+    
+    //limpiamos los flag para que el interrupt deje de producirse
+    PORTC->ISFR |= (1 << 12);
+    PORTC->ISFR |= (1 << 3);
+}
+
+void LPTMR0_IRQHandler(void) {
+    if (LPTMR0->CSR & LPTMR_CSR_TCF_MASK) {
+        if (!stopTimer && ss > 0) {
+            ss--;  // Decrementar el contador de segundos
+
+            // Actualizar el LCD
+            lcd_display_time(aa, ss);
+        }
+        LPTMR0->CSR |= LPTMR_CSR_TCF_MASK;
+    }
+}
+
+int main(void)
+{
+  irclk_ini(); // Enable internal ref clk to use by LCD
+  init_buttons();
+  led_init();
+
+  lcd_ini();
+  
+  SIM->COPC = 0;               // Desactivar Watchdog Timer
+  
+  setS();
+  
+  setA();
+  
+  stopTimer = 0;
+  
+  while(ss > aa){
+    delay();
+    lcd_display_time(aa, ss);
+  }
+  
+  alarm();
+  
+  end_count();  
 
   return 0;
 }
