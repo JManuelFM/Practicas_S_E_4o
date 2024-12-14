@@ -69,16 +69,18 @@ void led_init()
     GPIOE->PSOR |= (1 << 29);     // Apagar o LED (pón o PTE29 en alto)
 }
 
-void LPTMR_Init(void) {
+void LPTMR_Init() {
     SIM->SCGC5 |= SIM_SCGC5_LPTMR_MASK;  // Habilitar reloj para LPTMR
 
     LPTMR0->CSR = 0;  // Desactivar temporizador antes de configurarlo
+    
     LPTMR0->PSR = LPTMR_PSR_PCS(1) | LPTMR_PSR_PBYP_MASK;  // Usar reloj LPO (1 kHz), sin divisor
     LPTMR0->CMR = 1000;  // 1000 ticks = 1 segundo
-    LPTMR0->CSR = LPTMR_CSR_TIE_MASK | LPTMR_CSR_TEN_MASK;  // Activar con interrupción
 
     NVIC_EnableIRQ(LPTMR0_IRQn);  // Activar interrupción para LPTMR
     NVIC_SetPriority(LPTMR0_IRQn, 2);  // Prioridad baja
+    
+    LPTMR0->CSR = LPTMR_CSR_TIE_MASK | LPTMR_CSR_TEN_MASK;  // Activar con interrupción
 }
 
 void end_count(){
@@ -124,6 +126,7 @@ void setA(){
 }
 
 void setS(){
+  sSet = 0;
   GPIOD->PCOR |= (1 << 5);
   while(!sSet){
     lcd_display_time(aa, ss);
@@ -159,7 +162,7 @@ void PORTDIntHandler(void){
     PORTC->ISFR |= (1 << 3);
 }
 
-void LPTMR0_IRQHandler(void) {
+void LPTMRIntHandler(void) {
     if (LPTMR0->CSR & LPTMR_CSR_TCF_MASK) {
         if (!stopTimer && ss > 0) {
             ss--;  // Decrementar el contador de segundos
@@ -173,28 +176,28 @@ void LPTMR0_IRQHandler(void) {
 
 int main(void)
 {
-  irclk_ini(); // Enable internal ref clk to use by LCD
-  init_buttons();
-  led_init();
+  SIM->COPC = 0;      // Desactivar Watchdog Timer
 
   lcd_ini();
   
-  SIM->COPC = 0;               // Desactivar Watchdog Timer
+  stopTimer = 0;
+  
+  irclk_ini(); // Enable internal ref clk to use by LCD
+  init_buttons();
+  led_init();
   
   setS();
   
   setA();
   
-  stopTimer = 0;
+  LPTMR_Init();
   
-  while(ss > aa){
-    delay();
-    lcd_display_time(aa, ss);
+  while (1) {
+    if (ss == aa) {
+      alarm();
+      end_count();
+    }
   }
-  
-  alarm();
-  
-  end_count();  
 
   return 0;
 }
